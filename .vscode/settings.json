@@ -1,0 +1,5 @@
+{
+  "C_Cpp.default.cStandard": "c23",
+  "C_Cpp.default.cppStandard": "c++20",
+  "clangd.fallbackFlags": ["-std=c++20"]
+}
