@@ -1,0 +1,32 @@
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+AlignAfterOpenBracket: DontAlign
+AlignOperands: DontAlign
+AlignTrailingComments:
+  Kind: Never
+  OverEmptyLines: 0
+AllowAllParametersOfDeclarationOnNextLine: false
+BreakConstructorInitializers: AfterColon
+ColumnLimit: 0
+ConstructorInitializerIndentWidth: 8
+ContinuationIndentWidth: 8
+Cpp11BracedListStyle: false
+IncludeCategories:
+  - Regex: ^".*"$
+    Priority: 1
+  - Regex: ^<.*\.h>$
+    Priority: 2
+  - Regex: ^<.*>$
+    Priority: 3
+IndentCaseLabels: true
+IndentWidth: 2
+KeepEmptyLinesAtTheStartOfBlocks: false
+ObjCBlockIndentWidth: 4
+PackConstructorInitializers: NextLine
+RemoveSemicolon: true
+SpacesInLineCommentPrefix:
+  Minimum: 0 # We want a minimum of 1 for comments, but allow 0 for disabled code.
+  Maximum: -1
+Standard: c++20
+TabWidth: 2
+UseTab: Always
