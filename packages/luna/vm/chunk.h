@@ -17,21 +17,23 @@ public:
   int count;
   int capacity;
   uint8_t *code;
+  int *lines;
   ValueArray constants;
 
 public:
-  Chunk() : count(0), capacity(0), code(nullptr) {};
+  Chunk() : count(0), capacity(0), code(nullptr), lines(nullptr) {};
 
   void init_me() {
     this->count = 0;
     this->capacity = 0;
     this->code = nullptr;
+    this->lines = nullptr;
     this->constants = ValueArray();
   }
 
   int add_constant(Value value);
 
-  void write_me(uint8_t byte);
+  void write_me(uint8_t byte, int line);
 
   void free_me();
 };
