@@ -1,5 +1,5 @@
-#include "vm/chunk.h"
-#include "vm/debug.h"
+#include "compiler/chunk.h"
+#include "compiler/debug.h"
 
 using namespace Luna::VM;
 
