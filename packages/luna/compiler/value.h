@@ -24,7 +24,7 @@ public:
 
   void free_me();
 
-  void print_me(Value value);
+  static void print_me(Value value);
 };
 
 } // namespace Luna::Compiler
