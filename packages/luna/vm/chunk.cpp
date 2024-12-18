@@ -2,6 +2,12 @@
 
 namespace Luna::VM {
 
+int Chunk::add_constant(Value value) {
+  this->constants.write_me(value);
+
+  return this->constants.count - 1;
+}
+
 void Chunk::write_me(uint8_t byte) {
   if (capacity < count + 1) {
     int old_capacity = this->capacity;
@@ -15,6 +21,7 @@ void Chunk::write_me(uint8_t byte) {
 
 void Chunk::free_me() {
   FREE_ARRAY(uint8_t, this->code, this->capacity);
+  this->constants.free_me();
 
   this->init_me();
 }
