@@ -1,11 +1,11 @@
-#ifndef LUNA_VM_CHUNK_H
-#define LUNA_VM_CHUNK_H
+#ifndef LUNA_COMPILER_CHUNK_H
+#define LUNA_COMPILER_CHUNK_H
 
 #include "common.h"
 #include "memory.h"
 #include "value.h"
 
-namespace Luna::VM {
+namespace Luna::Compiler {
 
 enum OpCode {
   RETURN,
@@ -38,6 +38,6 @@ public:
   void free_me();
 };
 
-}; // namespace Luna::VM
+}; // namespace Luna::Compiler
 
 #endif

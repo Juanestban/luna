@@ -1,11 +1,11 @@
-#ifndef LUNA_VM_MEMORY_H
-#define LUNA_VM_MEMORY_H
+#ifndef LUNA_COMPILER_MEMORY_H
+#define LUNA_COMPILER_MEMORY_H
 
 #include <cstdlib>
 
 #include "common.h"
 
-namespace Luna::VM {
+namespace Luna::Compiler {
 
 #define GROW_CAPACITY(capacity) ((capacity) < 8 ? 8 : (capacity) * 2)
 
@@ -18,6 +18,6 @@ namespace Luna::VM {
 
 void *reallocate(void *pointer, size_t old_size, size_t new_size);
 
-} // namespace Luna::VM
+} // namespace Luna::Compiler
 
 #endif

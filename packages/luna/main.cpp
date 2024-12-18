@@ -1,7 +1,7 @@
 #include "compiler/chunk.h"
 #include "compiler/debug.h"
 
-using namespace Luna::VM;
+using namespace Luna::Compiler;
 
 int main() {
   Chunk *chunk = new Chunk();

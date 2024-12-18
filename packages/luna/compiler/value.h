@@ -1,11 +1,11 @@
-#ifndef LUNA_VM_VALUE_H
-#define LUNA_VM_VALUE_H
+#ifndef LUNA_COMPILER_VALUE_H
+#define LUNA_COMPILER_VALUE_H
 
 #include <cstdio>
 
 #include "common.h"
 
-namespace Luna::VM {
+namespace Luna::Compiler {
 
 typedef double Value;
 
@@ -27,6 +27,6 @@ public:
   void print_me(Value value);
 };
 
-} // namespace Luna::VM
+} // namespace Luna::Compiler
 
 #endif

@@ -3,7 +3,7 @@
 #include "value.h"
 #include <cstdio>
 
-namespace Luna::VM {
+namespace Luna::Compiler {
 
 void disassemble_chunk(Chunk *chunk, const char *name) {
   printf("== %s ==\n", name);
@@ -54,4 +54,4 @@ int disassemble_instruction(Chunk *chunk, int offset) {
   }
 }
 
-} // namespace Luna::VM
+} // namespace Luna::Compiler

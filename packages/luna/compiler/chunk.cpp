@@ -1,7 +1,7 @@
 #include "chunk.h"
 #include "memory.h"
 
-namespace Luna::VM {
+namespace Luna::Compiler {
 
 int Chunk::add_constant(Value value) {
   this->constants.write_me(value);
@@ -30,4 +30,4 @@ void Chunk::free_me() {
   this->init_me();
 }
 
-} // namespace Luna::VM
+} // namespace Luna::Compiler

@@ -1,7 +1,7 @@
 #include "value.h"
 #include "memory.h"
 
-namespace Luna::VM {
+namespace Luna::Compiler {
 
 void ValueArray::print_me(Value value) { printf("%g", value); }
 
@@ -29,4 +29,4 @@ void ValueArray::free_me() {
   this->init_me();
 }
 
-} // namespace Luna::VM
+} // namespace Luna::Compiler

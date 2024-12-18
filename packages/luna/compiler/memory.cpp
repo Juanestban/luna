@@ -1,6 +1,6 @@
 #include "memory.h"
 
-namespace Luna::VM {
+namespace Luna::Compiler {
 
 void *reallocate(void *pointer, size_t old_size, size_t new_size) {
   if (new_size == 0) {
@@ -18,4 +18,4 @@ void *reallocate(void *pointer, size_t old_size, size_t new_size) {
   return result;
 }
 
-} // namespace Luna::VM
+} // namespace Luna::Compiler
