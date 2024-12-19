@@ -96,4 +96,10 @@ Value VM::pop() {
   return *this->stack_top;
 }
 
+InterpertResult VM::interpret(const char *source) {
+  compile(source);
+
+  return INTERPRET_OK;
+};
+
 } // namespace Luna::VM

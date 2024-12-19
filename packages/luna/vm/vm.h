@@ -4,6 +4,7 @@
 #include <cstdio>
 
 #include "../compiler/chunk.h"
+#include "../compiler/compiler.h"
 #include "../compiler/value.h"
 
 namespace Luna::VM {
@@ -34,6 +35,7 @@ public:
 
   InterpertResult run();
   InterpertResult interpret(Chunk *chunk);
+  InterpertResult interpret(const char *source);
 
   void push(Value value);
   Value pop();
