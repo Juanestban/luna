@@ -1,5 +1,4 @@
 #include "vm.h"
-#include "../compiler/debug.h"
 
 namespace Luna::VM {
 
@@ -97,9 +96,22 @@ Value VM::pop() {
 }
 
 InterpertResult VM::interpret(const char *source) {
-  compile(source);
+  Chunk *chunk = new Chunk();
 
-  return INTERPRET_OK;
+  if (!compile(source, chunk)) {
+    chunk->free_me();
+
+    return INTERPRET_COMPILE_ERROR;
+  }
+
+  this->chunk = chunk;
+  this->ip = this->chunk->code;
+
+  InterpertResult result = this->run();
+
+  chunk->free_me();
+
+  return result;
 };
 
 } // namespace Luna::VM

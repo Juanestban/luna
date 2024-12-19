@@ -5,7 +5,9 @@
 
 #include "../compiler/chunk.h"
 #include "../compiler/compiler.h"
+#include "../compiler/debug.h"
 #include "../compiler/value.h"
+
 
 namespace Luna::VM {
 

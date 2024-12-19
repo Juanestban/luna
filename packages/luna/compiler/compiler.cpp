@@ -1,16 +1,25 @@
 #include <cstdio>
 
 #include "compiler.h"
-#include "lexer/scanner.h"
 
 namespace Luna::Compiler {
 
 using namespace Lexer;
 
-void compile(const char *source) {
+bool compile(const char *source, Chunk *chunk) {
   Scanner *scanner = new Scanner();
+  Parser *parser = new Parser();
 
   scanner->init_scanner(source);
+
+  parser->had_error = false;
+  parser->panic_mode = false;
+
+  parser->advance();
+  parser->expression();
+
+  parser->consume(TOKEN_EOF, "Expect end of expression.");
+  return !parser->had_error;
 
   int line = -1;
 
