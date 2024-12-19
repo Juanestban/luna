@@ -3,6 +3,7 @@
 
 # dist build
 build
+output
 
 ### C ###
 # Prerequisites

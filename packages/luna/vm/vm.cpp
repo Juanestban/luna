@@ -8,6 +8,8 @@ void VM::free_me() {}
 
 void VM::reset_stack() { this->stack_top = this->stack; }
 
+VM::VM() { this->reset_stack(); }
+
 InterpertResult VM::run() {
 #define READ_BYTE() (*this->ip++)
 #define READ_CONSTANT() (this->chunk->constants.values[READ_BYTE()])
@@ -98,7 +100,7 @@ Value VM::pop() {
 InterpertResult VM::interpret(const char *source) {
   Chunk *chunk = new Chunk();
 
-  if (!compile(source, chunk)) {
+  if (!LunaCompiler::compile(source, chunk)) {
     chunk->free_me();
 
     return INTERPRET_COMPILE_ERROR;

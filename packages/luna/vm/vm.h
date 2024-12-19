@@ -28,12 +28,14 @@ public:
   Value *stack_top;
 
 public:
-  VM() { this->reset_stack(); }
+  VM();
 
+public:
   void init_me();
   void free_me();
   void reset_stack();
 
+public:
   InterpertResult run();
   InterpertResult interpret(Chunk *chunk);
   InterpertResult interpret(const char *source);

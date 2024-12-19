@@ -16,11 +16,10 @@ public:
   bool panic_mode;
 
 public:
-  Parser() {}
+  Parser(Scanner *_scanner) : scanner(_scanner) {}
 
 public:
   void advance();
-  void expression();
   void consume(TokenType type, const char *message);
   void error_at_current(const char *message);
   void error_at(const char *message);

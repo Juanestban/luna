@@ -12,11 +12,6 @@ void Parser::consume(TokenType type, const char *message) {
   this->error_at_current(message);
 }
 
-void Parser::expression() {
-  this->advance();
-  return;
-}
-
 void Parser::error_at(const char *message) {
   if (this->panic_mode) {
     return;

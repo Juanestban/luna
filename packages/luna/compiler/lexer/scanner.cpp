@@ -41,9 +41,9 @@ char Scanner::peek() { return *this->current; }
 
 void Scanner::skip_white_space() {
   for (;;) {
-    char character = this->peek();
+    char c = this->peek();
 
-    switch (character) {
+    switch (c) {
     case ' ':
     case '\r':
     case 't':
@@ -218,7 +218,7 @@ void Scanner::scan_token() {
     break;
   }
   case '*': {
-    return this->make_token(TOKEN_START);
+    return this->make_token(TOKEN_STAR);
   }
   case '!': {
     return this->make_token(this->match('=') ? TOKEN_BANG_EQUAL : TOKEN_BANG);

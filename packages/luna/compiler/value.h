@@ -17,7 +17,7 @@ public:
   Value *values;
 
 public:
-  ValueArray() : values(nullptr), capacity(0), count(0) {}
+  ValueArray() : capacity(0), count(0), values(nullptr) {}
 
   void init_me();
 

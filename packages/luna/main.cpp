@@ -1,15 +1,11 @@
 #include <cstdio>
 #include <cstdlib>
-#include <string>
 
-#include "compiler/chunk.h"
-#include "compiler/common.h"
 #include "vm/vm.h"
 
-using namespace Luna::Compiler;
-using namespace Luna::VM;
+using namespace Luna;
 
-static void repl(VM *vm) {
+void repl(VM::VM *vm) {
   char line[1024];
 
   for (;;) {
@@ -24,7 +20,7 @@ static void repl(VM *vm) {
   }
 }
 
-static char *read_file(const char *path) {
+char *read_file(const char *path) {
   FILE *file = fopen(path, "rb");
 
   if (file == NULL) {
@@ -58,20 +54,20 @@ static char *read_file(const char *path) {
   return buffer;
 }
 
-static void run_file(const char *path, VM *vm) {
+static void run_file(const char *path, VM::VM *vm) {
   char *source = read_file(path);
 
-  InterpertResult result = vm->interpret(source);
+  VM::InterpertResult result = vm->interpret(source);
   free(source);
 
-  if (result == INTERPRET_COMPILE_ERROR)
+  if (result == VM::INTERPRET_COMPILE_ERROR)
     exit(65);
-  if (result == INTERPRET_RUNTIME_ERROR)
+  if (result == VM::INTERPRET_RUNTIME_ERROR)
     exit(70);
 }
 
 int main(int argc, const char *argv[]) {
-  VM *vm = new VM();
+  VM::VM *vm = new VM::VM();
 
   if (argc == 1) {
     repl(vm);
