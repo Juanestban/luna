@@ -1,2 +1,5 @@
-var language = 'Luna Language';
-var version '0.0.0';
+var language = "Luna Language";
+var version = "0.0.0";
+
+var name = "Juan";
+var say = "Saludo, {name}!";

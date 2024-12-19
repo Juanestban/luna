@@ -42,7 +42,7 @@ debug:
 	@echo "Build sub directories: $(BUILD_SUBDIRS)"
 
 test:
-	./build/luna.exe ./src/main.xn
+	./build/luna.exe $(SRC_DIR)/main.ln
 
 clean:
 	rm -r build

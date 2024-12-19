@@ -42,7 +42,7 @@ enum TokenType {
   TOKEN_FALSE,
   TOKEN_TRUE,
   TOKEN_FOR,
-  TOKEN_FUN,
+  TOKEN_FN,
   TOKEN_IF,
   TOKEN_ELIF,
   TOKEN_OR,
@@ -91,6 +91,8 @@ public:
 
 public:
   TokenType identifier_type();
+  TokenType check_keyword(int start, int length, const char *rest,
+                          TokenType type);
 
 public:
   void init_scanner(const char *source);

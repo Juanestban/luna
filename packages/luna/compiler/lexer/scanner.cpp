@@ -1,5 +1,6 @@
-#include "scanner.h"
 #include <cstring>
+
+#include "scanner.h"
 
 namespace Luna::Compiler::Lexer {
 
@@ -97,7 +98,56 @@ bool Scanner::is_alpha(char c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
 
-TokenType Scanner::identifier_type() { return TOKEN_IDENTIFIER; }
+TokenType Scanner::check_keyword(int start, int length, const char *rest,
+                                 TokenType type) {
+  if (this->current - this->start == start + length &&
+      memcmp(this->start + start, rest, length) == 0) {
+    return type;
+  }
+
+  return TOKEN_IDENTIFIER;
+};
+
+TokenType Scanner::identifier_type() {
+  switch (this->start[0]) {
+  case 'a':
+    return this->check_keyword(1, 2, "nd", TOKEN_AND);
+  case 'c':
+    return this->check_keyword(1, 4, "lass", TOKEN_CLASS);
+  case 'e':
+    return this->check_keyword(1, 3, "lse", TOKEN_ELSE);
+  case 'f': {
+    if (this->current - this->start > 1) {
+      switch (this->start[1]) {
+      case 'a':
+        return this->check_keyword(2, 3, "alse", TOKEN_FALSE);
+      case 'o':
+        return this->check_keyword(2, 1, "r", TOKEN_FOR);
+      case 'n':
+        return TOKEN_FN;
+      }
+    }
+    break;
+  }
+  case 'i':
+    return this->check_keyword(1, 1, "f", TOKEN_IF);
+  case 'n':
+    return this->check_keyword(1, 3, "ull", TOKEN_NULL);
+  case 'o':
+    return this->check_keyword(1, 1, "r", TOKEN_OR);
+  case 'p':
+    return this->check_keyword(1, 4, "rint", TOKEN_PRINT);
+  case 'r':
+    return this->check_keyword(1, 5, "eturn", TOKEN_RETURN);
+  case 's':
+    return this->check_keyword(1, 4, "uper", TOKEN_SUPER);
+  case 'v':
+    return this->check_keyword(1, 2, "ar", TOKEN_VAR);
+  case 'w':
+    return this->check_keyword(1, 4, "hile", TOKEN_WHILE);
+  }
+  return TOKEN_IDENTIFIER;
+}
 
 void Scanner::identifier() {
   while (this->is_alpha(this->peek()) || this->is_digit(this->peek())) {
@@ -130,40 +180,31 @@ void Scanner::scan_token() {
 
   switch (character) {
   case '(': {
-    this->make_token(TOKEN_LEFT_PAREN);
-    break;
+    return this->make_token(TOKEN_LEFT_PAREN);
   }
   case ')': {
-    this->make_token(TOKEN_RIGHT_PAREN);
-    break;
+    return this->make_token(TOKEN_RIGHT_PAREN);
   }
   case '{': {
-    this->make_token(TOKEN_LEFT_BRACE);
-    break;
+    return this->make_token(TOKEN_LEFT_BRACE);
   }
   case '}': {
-    this->make_token(TOKEN_RIGHT_BRACE);
-    break;
+    return this->make_token(TOKEN_RIGHT_BRACE);
   }
   case ';': {
-    this->make_token(TOKEN_SEMICOLON);
-    break;
+    return this->make_token(TOKEN_SEMICOLON);
   }
   case ',': {
-    this->make_token(TOKEN_COMMA);
-    break;
+    return this->make_token(TOKEN_COMMA);
   }
   case '.': {
-    this->make_token(TOKEN_DOT);
-    break;
+    return this->make_token(TOKEN_DOT);
   }
   case '-': {
-    this->make_token(TOKEN_MINUS);
-    break;
+    return this->make_token(TOKEN_MINUS);
   }
   case '+': {
-    this->make_token(TOKEN_PLUS);
-    break;
+    return this->make_token(TOKEN_PLUS);
   }
   case '/': {
     if (this->peek_next() == '/') {
@@ -173,45 +214,53 @@ void Scanner::scan_token() {
     } else {
       return;
     }
-
     // this->make_token(TOKEN_SLASH);
     break;
   }
   case '*': {
-    this->make_token(TOKEN_START);
-    break;
+    return this->make_token(TOKEN_START);
   }
   case '!': {
-    this->make_token(this->match('=') ? TOKEN_BANG_EQUAL : TOKEN_BANG);
-    break;
+    return this->make_token(this->match('=') ? TOKEN_BANG_EQUAL : TOKEN_BANG);
   }
   case '=':
-    this->make_token(this->match('=') ? TOKEN_EQUAL_EQUAL : TOKEN_EQUAL);
-    break;
+    return this->make_token(this->match('=') ? TOKEN_EQUAL_EQUAL : TOKEN_EQUAL);
   case '<': {
-    this->make_token(this->match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
-    break;
+    return this->make_token(this->match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
   }
   case '>': {
-    this->make_token(this->match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
-    break;
+    return this->make_token(this->match('=') ? TOKEN_GREATER_EQUAL
+                                             : TOKEN_GREATER);
   }
   case '"': {
-    this->string();
-    break;
+    return this->string();
   }
   }
 
-  this->error_token("Unexpected character");
+  return this->error_token("Unexpected character");
 }
 
 void Scanner::string() {
   while (this->peek() != '"' && !this->is_at_end()) {
-    if (this->peek() == '\n') {
-      this->line++;
-    }
+    if (this->peek() == '{') {
+      this->advance();
 
-    this->advance();
+      while (this->peek() != '}' && !this->is_at_end()) {
+        this->advance();
+      }
+
+      if (this->is_at_end()) {
+        this->error_token("Unterminated string.");
+        return;
+      }
+      this->advance();
+    } else {
+      if (this->peek() == '\n') {
+        this->line++;
+      }
+
+      this->advance();
+    }
   }
 
   if (this->is_at_end()) {
@@ -219,6 +268,7 @@ void Scanner::string() {
     return;
   }
 
+  // closing quotes
   this->advance();
   this->make_token(TOKEN_STRING);
 }
