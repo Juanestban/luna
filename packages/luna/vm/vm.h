@@ -8,7 +8,6 @@
 #include "../compiler/debug.h"
 #include "../compiler/value.h"
 
-
 namespace Luna::VM {
 
 #define STACK_MAX 256

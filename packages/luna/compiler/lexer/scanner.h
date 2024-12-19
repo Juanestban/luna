@@ -1,6 +1,8 @@
 #ifndef LUNA_COMPILER_SCANNER_H
 #define LUNA_COMPILER_SCANNER_H
 
+#include "../common.h"
+
 namespace Luna::Compiler::Lexer {
 
 enum TokenType {
@@ -15,7 +17,7 @@ enum TokenType {
   TOKEN_PLUS,
   TOKEN_SEMICOLON,
   TOKEN_SLASH,
-  TOKEN_START,
+  TOKEN_STAR,
 
   // oNE OR Two character tokens
   TOKEN_BANG,
@@ -38,13 +40,13 @@ enum TokenType {
   // Keywords
   TOKEN_AND,
   TOKEN_CLASS,
-  TOKEN_ELSE,
   TOKEN_FALSE,
   TOKEN_TRUE,
   TOKEN_FOR,
   TOKEN_FN,
   TOKEN_IF,
   TOKEN_ELIF,
+  TOKEN_ELSE,
   TOKEN_OR,
   TOKEN_NULL,
   TOKEN_PRINT,
