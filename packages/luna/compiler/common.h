@@ -4,6 +4,7 @@
 #include <cstdbool>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 
 #define DEBUG_TRACE_EXECUTION
 

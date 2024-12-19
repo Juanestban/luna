@@ -1,7 +1,4 @@
 #include "debug.h"
-#include "chunk.h"
-#include "value.h"
-#include <cstdio>
 
 namespace Luna::Compiler {
 

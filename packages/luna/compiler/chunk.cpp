@@ -1,5 +1,4 @@
 #include "chunk.h"
-#include "memory.h"
 
 namespace Luna::Compiler {
 

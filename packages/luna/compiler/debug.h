@@ -4,6 +4,8 @@
 #include <cstdio>
 
 #include "chunk.h"
+#include "value.h"
+
 
 namespace Luna::Compiler {
 

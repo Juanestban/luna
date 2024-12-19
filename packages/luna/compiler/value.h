@@ -4,6 +4,7 @@
 #include <cstdio>
 
 #include "common.h"
+#include "memory.h"
 
 namespace Luna::Compiler {
 
