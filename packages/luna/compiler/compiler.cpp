@@ -109,7 +109,7 @@ void LunaCompiler::emit_return() { LunaCompiler::emit_byte(OP_RETURN); }
 void LunaCompiler::end_compiler() {
   LunaCompiler::emit_return();
 
-#ifndef DEBUG_PRINT_CODE
+#ifdef DEBUG_PRINT_CODE
   if (!parser->had_error) {
     disassemble_chunk(chunk, "code");
   }
