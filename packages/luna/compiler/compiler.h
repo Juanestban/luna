@@ -58,6 +58,7 @@ public:
   static void grouping();
   static void unary();
   static void binary();
+  static void literal();
 
 public:
   static void parse_precedence(Precedence precedence);

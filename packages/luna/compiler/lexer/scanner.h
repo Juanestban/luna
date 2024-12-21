@@ -35,6 +35,7 @@ enum TokenType {
   TOKEN_INT,
   TOKEN_FLOAT,
   TOKEN_BOOL,
+  TOKEN_OBJ,
   TOKEN_CONST,
 
   // Keywords

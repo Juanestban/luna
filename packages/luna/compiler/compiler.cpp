@@ -1,4 +1,7 @@
 #include "compiler.h"
+#include "chunk.h"
+#include "lexer/scanner.h"
+#include "value.h"
 
 namespace Luna::Compiler {
 
@@ -9,52 +12,69 @@ Parser *LunaCompiler::parser;
 Chunk *LunaCompiler::chunk;
 
 ParseRule LunaCompiler::rules[] = {
-    {grouping, NULL, PREC_NONE}, // TOKEN_LEFT_PAREN
-    {NULL, NULL, PREC_NONE},     // TOKEN_RIGHT_PAREN
-    {NULL, NULL, PREC_NONE},     // TOKEN_LEFT_BRACE
-    {NULL, NULL, PREC_NONE},     // TOKEN_RIGHT_BRACE
-    {NULL, NULL, PREC_NONE},     // TOKEN_COMMA
-    {NULL, NULL, PREC_NONE},     // TOKEN_DOT
-    {unary, binary, PREC_TERM},  // TOKEN_MINUS
-    {NULL, binary, PREC_TERM},   // TOKEN_PLUS
-    {NULL, NULL, PREC_NONE},     // TOKEN_SEMICOLON
-    {NULL, binary, PREC_FACTOR}, // TOKEN_SLASH
-    {NULL, binary, PREC_FACTOR}, // TOKEN_STAR
-    {NULL, NULL, PREC_NONE},     // TOKEN_BANG
-    {NULL, NULL, PREC_NONE},     // TOKEN_BANG_EQUAL
-    {NULL, NULL, PREC_NONE},     // TOKEN_EQUAL
-    {NULL, NULL, PREC_NONE},     // TOKEN_EQUAL_EQUAL
-    {NULL, NULL, PREC_NONE},     // TOKEN_GREATER
-    {NULL, NULL, PREC_NONE},     // TOKEN_GREATER_EQUAL
-    {NULL, NULL, PREC_NONE},     // TOKEN_LESS
-    {NULL, NULL, PREC_NONE},     // TOKEN_LESS_EQUAL
-    {NULL, NULL, PREC_NONE},     // TOKEN_IDENTIFIER
-    {NULL, NULL, PREC_NONE},     // TOKEN_STRING
-    {number, NULL, PREC_NONE},   // TOKEN_INT
-    {number, NULL, PREC_NONE},   // TOKEN_FLOAT
-    {NULL, NULL, PREC_NONE},     // TOKEN_BOOL
-    {NULL, NULL, PREC_NONE},     // TOKEN_CONSTANT
-    {NULL, NULL, PREC_NONE},     // TOKEN_AND
-    {NULL, NULL, PREC_NONE},     // TOKEN_CLASS
-    {NULL, NULL, PREC_NONE},     // TOKEN_FALSE
-    {NULL, NULL, PREC_NONE},     // TOKEN_TRUE
-    {NULL, NULL, PREC_NONE},     // TOKEN_FOR
-    {NULL, NULL, PREC_NONE},     // TOKEN_FN
-    {NULL, NULL, PREC_NONE},     // TOKEN_IF
-    {NULL, NULL, PREC_NONE},     // TOKEN_ELIF
-    {NULL, NULL, PREC_NONE},     // TOKEN_ELSE
-    {NULL, NULL, PREC_NONE},     // TOKEN_OR
-    {NULL, NULL, PREC_NONE},     // TOKEN_NULL
-    {NULL, NULL, PREC_NONE},     // TOKEN_PRINT
-    {NULL, NULL, PREC_NONE},     // TOKEN_RETURN
-    {NULL, NULL, PREC_NONE},     // TOKEN_SUPER
-    {NULL, NULL, PREC_NONE},     // TOKEN_THIS
-    {NULL, NULL, PREC_NONE},     // TOKEN_EXTENDS
-    {NULL, NULL, PREC_NONE},     // TOKEN_VAR
-    {NULL, NULL, PREC_NONE},     // TOKEN_WHILE
-    {NULL, NULL, PREC_NONE},     // TOKEN_ERROR
-    {NULL, NULL, PREC_NONE},     // TOKEN_EOF
+    {grouping, NULL, PREC_NONE},     // TOKEN_LEFT_PAREN
+    {NULL, NULL, PREC_NONE},         // TOKEN_RIGHT_PAREN
+    {NULL, NULL, PREC_NONE},         // TOKEN_LEFT_BRACE
+    {NULL, NULL, PREC_NONE},         // TOKEN_RIGHT_BRACE
+    {NULL, NULL, PREC_NONE},         // TOKEN_COMMA
+    {NULL, NULL, PREC_NONE},         // TOKEN_DOT
+    {unary, binary, PREC_TERM},      // TOKEN_MINUS
+    {NULL, binary, PREC_TERM},       // TOKEN_PLUS
+    {NULL, NULL, PREC_NONE},         // TOKEN_SEMICOLON
+    {NULL, binary, PREC_FACTOR},     // TOKEN_SLASH
+    {NULL, binary, PREC_FACTOR},     // TOKEN_STAR
+    {unary, NULL, PREC_NONE},        // TOKEN_BANG
+    {NULL, binary, PREC_EQUALITY},   // TOKEN_BANG_EQUAL
+    {NULL, NULL, PREC_NONE},         // TOKEN_EQUAL
+    {NULL, binary, PREC_EQUALITY},   // TOKEN_EQUAL_EQUAL
+    {NULL, binary, PREC_COMPARISON}, // TOKEN_GREATER
+    {NULL, binary, PREC_COMPARISON}, // TOKEN_GREATER_EQUAL
+    {NULL, binary, PREC_COMPARISON}, // TOKEN_LESS
+    {NULL, binary, PREC_COMPARISON}, // TOKEN_LESS_EQUAL
+    {NULL, NULL, PREC_NONE},         // TOKEN_IDENTIFIER
+    {NULL, NULL, PREC_NONE},         // TOKEN_STRING
+    {number, NULL, PREC_NONE},       // TOKEN_INT
+    {number, NULL, PREC_NONE},       // TOKEN_FLOAT
+    {NULL, NULL, PREC_NONE},         // TOKEN_BOOL
+    {NULL, NULL, PREC_NONE},         // TOKEN_OBJ
+    {NULL, NULL, PREC_NONE},         // TOKEN_CONSTANT
+    {NULL, NULL, PREC_NONE},         // TOKEN_AND
+    {NULL, NULL, PREC_NONE},         // TOKEN_CLASS
+    {literal, NULL, PREC_NONE},      // TOKEN_FALSE
+    {literal, NULL, PREC_NONE},      // TOKEN_TRUE
+    {NULL, NULL, PREC_NONE},         // TOKEN_FOR
+    {NULL, NULL, PREC_NONE},         // TOKEN_FN
+    {NULL, NULL, PREC_NONE},         // TOKEN_IF
+    {NULL, NULL, PREC_NONE},         // TOKEN_ELIF
+    {NULL, NULL, PREC_NONE},         // TOKEN_ELSE
+    {NULL, NULL, PREC_NONE},         // TOKEN_OR
+    {literal, NULL, PREC_NONE},      // TOKEN_NULL
+    {NULL, NULL, PREC_NONE},         // TOKEN_PRINT
+    {NULL, NULL, PREC_NONE},         // TOKEN_RETURN
+    {NULL, NULL, PREC_NONE},         // TOKEN_SUPER
+    {NULL, NULL, PREC_NONE},         // TOKEN_THIS
+    {NULL, NULL, PREC_NONE},         // TOKEN_EXTENDS
+    {NULL, NULL, PREC_NONE},         // TOKEN_VAR
+    {NULL, NULL, PREC_NONE},         // TOKEN_WHILE
+    {NULL, NULL, PREC_NONE},         // TOKEN_ERROR
+    {NULL, NULL, PREC_NONE},         // TOKEN_EOF
 };
+
+void LunaCompiler::literal() {
+  switch (LunaCompiler::parser->previous->type) {
+  case TOKEN_FALSE:
+    LunaCompiler::emit_byte(OP_FALSE);
+    break;
+  case TOKEN_NULL:
+    LunaCompiler::emit_byte(OP_NULL);
+    break;
+  case TOKEN_TRUE:
+    LunaCompiler::emit_byte(OP_TRUE);
+    break;
+  default:
+    return; // Unreachable
+  }
+}
 
 void LunaCompiler::parse_precedence(Precedence precedence) {
   LunaCompiler::advance();
@@ -123,7 +143,7 @@ void LunaCompiler::expression() {
 void LunaCompiler::number() {
   double value = strtod(parser->previous->start, nullptr);
 
-  LunaCompiler::emit_constant(value);
+  LunaCompiler::emit_constant(NUMBER_VAL(value));
 };
 
 void LunaCompiler::emit_constant(Value value) {
@@ -142,6 +162,9 @@ void LunaCompiler::unary() {
   LunaCompiler::parse_precedence(PREC_UNARY);
 
   switch (operator_type) {
+  case TOKEN_BANG:
+    LunaCompiler::emit_byte(OP_NOT);
+    break;
   case TOKEN_MINUS:
     LunaCompiler::emit_byte(OP_NEGATE);
     break;
@@ -156,6 +179,24 @@ void LunaCompiler::binary() {
   LunaCompiler::parse_precedence((Precedence)(rule->precedence + 1));
 
   switch (operator_type) {
+  case TOKEN_BANG_EQUAL:
+    LunaCompiler::emit_byte(OP_EQUAL);
+    break;
+  case TOKEN_EQUAL_EQUAL:
+    LunaCompiler::emit_byte(OP_EQUAL);
+    break;
+  case TOKEN_GREATER:
+    LunaCompiler::emit_byte(OP_GREATER);
+    break;
+  case TOKEN_GREATER_EQUAL:
+    LunaCompiler::emit_byte(OP_LESS);
+    break;
+  case TOKEN_LESS:
+    LunaCompiler::emit_byte(OP_LESS);
+    break;
+  case TOKEN_LESS_EQUAL:
+    LunaCompiler::emit_byte(OP_GREATER);
+    break;
   case TOKEN_PLUS:
     LunaCompiler::emit_byte(OP_ADD);
     break;
